@@ -21,6 +21,7 @@
 	Obesidade2: .asciiz "com obesidade Grau 2(grave) (entre 35 e 40)."
 	Obesidade3: .asciiz "com obesidade Grau 3(mórbida) (acima de 40)."
 	 
+	Zero: .float 0
 	Quinze: .float 15
 	Dezesseis: .float 16
 	Dezoito_Cinco: .float 18.5
@@ -32,28 +33,15 @@
 .text 
 
 main:
-	#Solicitar o peso
-	li $v0, 4
-	la $a0, S_peso
-	syscall 
+	#Atribuindo a uma referência de valor nulo
+	lwc1 $f2, Zero
 	
-	#Entrada do peso
-	li $v0, 6
-	syscall
-	
-	mov.s $f1, $f0
-	
+	#Função do peso
+	jal SolicitarPeso
 	jal BarraN
 	
-	#Solicitar altura
-	li $v0, 4
-	la $a0, S_altura
-	syscall
-	
-	 #Entrada da altura
-	 li $v0, 6
-	 syscall
-	 
+	#Função da altura
+	 jal SolicitarAltura 
 	 jal BarraN
 	 
 	#Imprimindo os valores
@@ -144,7 +132,39 @@ BarraN:
 	la $a0, barraN
 	syscall
 	jr $ra
+
+SolicitarPeso:
+	#Solicitar o peso
+	li $v0, 4
+	la $a0, S_peso
+	syscall 
 	
+	#Entrada do peso
+	li $v0, 6
+	syscall
+	
+	mov.s $f1, $f0
+	
+	#Validar valor negativo
+	c.lt.s $f1,$f2
+	bc1t SolicitarPeso
+	 
+	 jr $ra
+SolicitarAltura:
+	#Solicitar altura
+	li $v0, 4
+	la $a0, S_altura
+	syscall
+	
+	 #Entrada da altura
+	 li $v0, 6
+	 syscall
+	 
+	 c.lt.s $f0,$f2
+	 bc1t SolicitarAltura
+	 
+	 jr $ra
+	 
 ExAbaixo_:
 	li $v0, 4
   	la $a0, ExAbaixo
