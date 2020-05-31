@@ -1,0 +1,216 @@
+#Guilherme dos Santos Moreira e Luiz Alfredo Thomasini
+
+.data
+	S_peso:	.asciiz "Digite seu peso (kg): "
+	S_altura: .asciiz "Digite sua altura (metros): "
+	barraN: .asciiz "\n"
+	
+	SuaAltura: .asciiz "Sua altura é: "
+	SeuPeso: .asciiz "Seu peso é: "
+	Metros: .asciiz " metros."
+	Kilogramas: .asciiz " kg."
+	SeuIMCeh: .asciiz "Seu IMC é: "
+	
+	VoceEsta: .asciiz "Você está "
+	ExAbaixo: .asciiz "extremamente abaixo do peso ideal (até 15)."
+	GraveAbaixo: .asciiz "gravemente abaixo do peso ideal (entre 15 e 16)."
+	Abaixo: .asciiz "abaixo do peso ideal (entre 16 e 18.5)."
+	Ideal: .asciiz "no peso ideal (entre 18.5 e 25)."
+	Sobrepeso: .asciiz "com sobrepeso (entre 25 e 30)."
+	Obesidade1: .asciiz "com obesidade Grau 1 (entre 30 e 35)."
+	Obesidade2: .asciiz "com obesidade Grau 2(grave) (entre 35 e 40)."
+	Obesidade3: .asciiz "com obesidade Grau 3(mórbida) (acima de 40)."
+	 
+	Quinze: .float 15
+	Dezesseis: .float 16
+	Dezoito_Cinco: .float 18.5
+	VinteCinco: .float 25
+	Trinta: .float 30
+	TrintaCinco: .float 35
+	Quarenta: .float 40
+
+.text 
+
+main:
+	#Solicitar o peso
+	li $v0, 4
+	la $a0, S_peso
+	syscall 
+	
+	#Entrada do peso
+	li $v0, 6
+	syscall
+	
+	mov.s $f1, $f0
+	
+	jal BarraN
+	
+	#Solicitar altura
+	li $v0, 4
+	la $a0, S_altura
+	syscall
+	
+	 #Entrada da altura
+	 li $v0, 6
+	 syscall
+	 
+	 jal BarraN
+	 
+	#Imprimindo os valores
+	 li $v0, 4
+	 la $a0, SeuPeso
+	 syscall
+	
+	 li $v0, 2
+	 mov.s $f12, $f1
+	 syscall
+	 
+	 li $v0, 4
+	 la $a0, Kilogramas
+	 syscall
+	 
+	 jal BarraN
+	
+	 li $v0, 4
+	 la $a0, SuaAltura
+	 syscall
+	
+	 li $v0, 2
+	 mov.s $f12, $f0
+	 syscall
+	 
+	 li $v0, 4
+	 la $a0, Metros
+	 syscall
+	 
+	 jal BarraN
+	 jal BarraN
+	 
+	 #Imprimindo o IMC
+	 li $v0, 4
+	 la $a0, SeuIMCeh
+	 syscall
+	 
+	 mul.s $f0, $f0, $f0
+	 div.s $f0, $f1, $f0
+	 
+	 li $v0, 2
+	 mov.s $f12, $f0
+	 syscall
+	 
+	 jal BarraN
+	 
+	 #Atribuindo '15' para o registradores '$f1'
+	 lwc1 $f1 Quinze
+	
+	 #Você está:
+	 li $v0, 4
+	 la $a0, VoceEsta
+	 syscall
+	 
+	 c.lt.s $f0,$f1
+	 bc1t ExAbaixo_
+	 
+	 lwc1 $f1 Dezesseis
+	 c.lt.s $f0,$f1
+	 bc1t GraveAbaixo_
+	 
+	 lwc1 $f1 Dezoito_Cinco
+	 c.lt.s $f0,$f1
+	 bc1t Abaixo_
+	 
+	 lwc1 $f1 VinteCinco
+	 c.lt.s $f0,$f1
+	 bc1t Ideal_
+	 
+	 lwc1 $f1 Trinta
+	 c.lt.s $f0,$f1
+	 bc1t Sobrepeso_
+	 
+	 lwc1 $f1 TrintaCinco
+	 c.lt.s $f0,$f1
+	 bc1t Obesidade1_
+	 
+	 lwc1 $f1 Quarenta
+	 c.lt.s $f0,$f1
+	 bc1t Obesidade2_
+	 
+	 jal Obesidade3_
+	 #Saindo do código (OBRIGATÓRIO)
+	 li $v0, 10
+	 syscall 
+BarraN:
+	li $v0, 4
+	la $a0, barraN
+	syscall
+	jr $ra
+	
+ExAbaixo_:
+	li $v0, 4
+  	la $a0, ExAbaixo
+  	syscall
+  	
+  	# Fim do sistema
+	li $v0, 10
+	syscall
+	
+GraveAbaixo_:
+	li $v0, 4
+  	la $a0, GraveAbaixo
+  	syscall
+  	
+  	# Fim do sistema
+	li $v0, 10
+	syscall
+	
+Abaixo_:
+	li $v0, 4
+  	la $a0, Abaixo
+  	syscall
+  	
+  	# Fim do sistema
+	li $v0, 10
+	syscall
+	
+Ideal_:
+	li $v0, 4
+  	la $a0, Ideal
+  	syscall
+  	
+  	# Fim do sistema
+	li $v0, 10
+	syscall
+	
+Sobrepeso_:
+	li $v0, 4
+  	la $a0, Sobrepeso
+  	syscall
+  	
+  	# Fim do sistema
+	li $v0, 10
+	syscall
+
+Obesidade1_:
+	li $v0, 4
+  	la $a0, Obesidade1
+  	syscall
+  	
+  	# Fim do sistema
+	li $v0, 10
+	syscall
+	
+Obesidade2_:
+	li $v0, 4
+  	la $a0, Obesidade2
+  	syscall
+  	
+  	# Fim do sistema
+	li $v0, 10
+	syscall
+	
+Obesidade3_:
+	li $v0, 4
+  	la $a0, Obesidade3
+  	syscall
+  	
+	

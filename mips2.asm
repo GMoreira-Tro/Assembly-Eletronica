@@ -1,3 +1,5 @@
+#Guilherme dos Santos Moreira e Luiz Alfredo
+
 .data
 	b_input: .asciiz "Informe b:"
 	c_input: .asciiz "Informe c:"
